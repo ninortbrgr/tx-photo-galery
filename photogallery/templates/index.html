@@ -1,11 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechniX Team Photo gallery</title>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Galerien — Fotogalerie{% endblock %}
+
+{% block extra_head %}
+<!-- Spezifisches CSS nur für die Galeriekarten & Medien-Grid -->
+<style>
+    main > h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 30px;
+        letter-spacing: -0.01em;
+    }
+
+    .gallery-container {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .gallery-card {
+        background: var(--card-bg);
+        backdrop-filter: var(--blur-effect);
+        -webkit-backdrop-filter: var(--blur-effect);
+        border: 1px solid var(--card-border);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .gallery-card:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .gallery-card h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .gallery-card .meta {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .gallery-card > p {
+        color: var(--text-secondary);
+        margin-bottom: 25px;
+        font-size: 1.05rem;
+    }
+
+    .media-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .media-item {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
+    }
+
+    .media-item:hover {
+        transform: scale(1.03);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .media-item img, 
+    .media-item video {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        display: block;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .media-item p {
+        padding: 12px;
+        font-size: 0.85rem;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>Deine freigeschalteten Galerien</h2>
+
+{% if galleries %}
+    <div class="gallery-container">
+        {% for gallery in galleries %}
+            <section class="gallery-card">
+                <h3>{{ gallery.title }}</h3>
+                <p class="meta">Kategorie: {{ gallery.get_category_display }} | Datum: {{ gallery.date }}</p>
+                <p>{{ gallery.description }}</p>
+
+                <div class="media-grid">
+                    {% for item in gallery.media_items.all %}
+                        <div class="media-item">
+                            {% if item.file.url|lower|slice:"-4:" == ".mp4" or item.file.url|lower|slice:"-5:" == ".webm" %}
+                                <video controls width="250">
+                                    <source src="{{ item.file.url }}" type="video/mp4">
+                                    Dein Browser unterstützt kein Video.
+                                </video>
+                            {% else %}
+                                <img src="{{ item.file.url }}" alt="{{ item.title }}" width="250">
+                            {% endif %}
+                            {% if item.title %}
+                                <p>{{ item.title }}</p>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <p>Diese Galerie enthält noch keine Medien.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>Du hast aktuell Zugriff auf keine Galerien.</p>
+{% endif %}
+{% endblock %}

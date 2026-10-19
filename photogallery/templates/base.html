@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Fotogalerie{% endblock %}</title>
+    
+    <!-- Apple Dark Mode CSS -->
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: rgba(28, 28, 30, 0.75);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #f5f5f7;
+            --text-secondary: #86868b;
+            --accent-color: #2997ff;
+            --blur-effect: blur(20px);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            padding: 40px 20px;
+        }
+
+        header {
+            max-width: 1200px;
+            margin: 0 auto 50px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 0.95rem;
+            transition: opacity 0.2s ease;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    </style>
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <header>
+        <h1>{% block header_title %}Fotogalerie{% endblock %}</h1>
+        <nav>
+            {% if request.user.is_authenticated %}
+                <span>Angemeldet als <strong>{{ request.user.username }}</strong></span>
+                {% if request.user.is_staff %}
+                    <a href="{% url 'admin:index' %}" target="_blank">Admin</a>
+                {% endif %}
+            {% else %}
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Hier wird der Inhalt aus den Kind-Templates eingefügt -->
+        {% endblock %}
+    </main>
+
+</body>
+</html>

@@ -76,6 +76,7 @@
         <nav>
             {% if request.user.is_authenticated %}
                 <span>Angemeldet als <strong>{{ request.user.username }}</strong></span>
+                <a href="{% url 'logout' %}">Abmelden</a>
                 {% if request.user.is_staff %}
                     <a href="{% url 'admin:index' %}" target="_blank">Admin</a>
                 {% endif %}

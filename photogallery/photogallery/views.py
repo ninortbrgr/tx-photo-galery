@@ -1,8 +1,6 @@
-from django.http import HttpResponse
 from django.shortcuts import render
-import random
+from django.contrib.auth.decorators import login_required
 
-def index(request):
-    name = "Django"
-    random_number = random.randint(1, 100)
-    return render(request, 'index.html', {'name': name, 'random_number': random_number})
+@login_required
+def index_view(request):
+    return render(request, 'index.html')

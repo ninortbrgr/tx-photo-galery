@@ -25,8 +25,12 @@ SECRET_KEY = 'django-insecure-x@mw3@k2n0g(h_w+-(0gdox@g)ts4s76yhv1nt$)8r@w7a9+&q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
+# Login URL for authentication
+LOGIN_URL = '/accounts/login/'
+LOGOUT_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'accounts/login/'  # Redirect to login page after logout
 
 # Application definition
 
@@ -47,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'photogallery.middleware.LoginRequiredMiddleware',  # Custom middleware for login requirement
 ]
 
 ROOT_URLCONF = 'photogallery.urls'
